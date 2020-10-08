@@ -6,7 +6,8 @@ import numpy.random as random
 random.seed(1651)
 A0 = random.randn(500, 500)
 x0 = random.randn(500)
-
+u0 = random.randn(400)
+v0 = random.randn(400)
 
 def basic_matvec(A, x):
     """
@@ -45,8 +46,13 @@ def column_matvec(A, x):
 
     This should be implemented using a single loop over the entries of x
     """
-
-    raise NotImplementedError
+    (m,n) = A.shape
+    b = np.zeros(m)
+    i = 0
+    for j in x:
+        b += j*A[:,i]
+        i += 1
+    return b
 
 
 def timeable_basic_matvec():
@@ -63,10 +69,9 @@ def timeable_column_matvec():
     Doing a matvec example with the column_matvec that we can
     pass to timeit.
     """
-
+    
     b = column_matvec(A0, x0) # noqa
-
-
+    
 def timeable_numpy_matvec():
     """
     Doing a matvec example with the builtin numpy matvec so that
@@ -98,8 +103,11 @@ def rank2(u1, u2, v1, v2):
     :param v1: n-dimensional numpy array
     :param v2: n-dimensional numpy array
     """
-
-    raise NotImplementedError
+    
+    Bt = np.array([u1,u2])
+    B = np.transpose(Bt)
+    Cconj = np.array([v1,v2])
+    C = Cconj.conj()
 
     A = B.dot(C)
 
@@ -115,10 +123,41 @@ def rank1pert_inv(u, v):
     :param v: m-dimensional numpy array
     """
 
-    raise NotImplementedError
+    (m,) = np.shape(u)
+    I = np.identity(m)
+    vconj = v.conj()
+    a = -1/(1+vconj.dot(u))
+    Ainv = I + a*(np.outer(u,vconj))
 
     return Ainv
 
+def timeable_rank1pert_inv():
+    """
+    Doing rank1 invert example with the rank1pert_inv that we can pass to timeit
+    """
+    
+    b = rank1pert_inv(u0, v0)
+    
+def timeable_inbuilt_inv():
+    """
+    Doing rank1 invert example with the built in inverse that we can pass to timeit
+    """
+    
+    (m,) = np.shape(u0)
+    I = np.identity(m)
+    v0conj = v0.conj()
+    A = I + np.outer(u0,v0conj)
+    b = np.linalg.inv(A)
+    
+def time_inv():
+    """
+    Get some timings for inverses
+    """
+    
+    print("Timing for rank1pert_inv")
+    print(timeit.Timer(timeable_rank1pert_inv).timeit(number=1))
+    print("Timing for inbuilt_inv")
+    print(timeit.Timer(timeable_inbuilt_inv).timeit(number=1))
 
 def ABiC(Ahat, xr, xi):
     """Return the real and imaginary parts of z = A*x, where A = B + iC
