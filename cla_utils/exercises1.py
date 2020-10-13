@@ -22,12 +22,12 @@ def basic_matvec(A, x):
 
     :return b: m-dimensional numpy array
     """
-    (m,n) = A.shape
+    (m, n) = A.shape
     b = np.zeros(m)
     
     for i in range(m):
         for j in range(n):
-            b[i] += A[i,j]*x[j]
+            b[i] += A[i, j] * x[j]
             
     return b
 
@@ -46,11 +46,11 @@ def column_matvec(A, x):
 
     This should be implemented using a single loop over the entries of x
     """
-    (m,n) = A.shape
+    (m, n) = A.shape
     b = np.zeros(m)
     i = 0
     for j in x:
-        b += j*A[:,i]
+        b += j * A[:, i]
         i += 1
     return b
 
@@ -104,9 +104,9 @@ def rank2(u1, u2, v1, v2):
     :param v2: n-dimensional numpy array
     """
     
-    Bt = np.array([u1,u2])
+    Bt = np.array([u1, u2])
     B = np.transpose(Bt)
-    Cconj = np.array([v1,v2])
+    Cconj = np.array([v1, v2])
     C = Cconj.conj()
 
     A = B.dot(C)
@@ -123,11 +123,11 @@ def rank1pert_inv(u, v):
     :param v: m-dimensional numpy array
     """
 
-    (m,) = np.shape(u)
+    (m, ) = np.shape(u)
     I = np.identity(m)
     vconj = v.conj()
-    a = -1/(1+vconj.dot(u))
-    Ainv = I + a*(np.outer(u,vconj))
+    a = -1/(1 + vconj.dot(u))
+    Ainv = I + a * (np.outer(u,vconj))
 
     return Ainv
 
@@ -143,10 +143,10 @@ def timeable_inbuilt_inv():
     Doing rank1 invert example with the built in inverse that we can pass to timeit
     """
     
-    (m,) = np.shape(u0)
+    (m, ) = np.shape(u0)
     I = np.identity(m)
     v0conj = v0.conj()
-    A = I + np.outer(u0,v0conj)
+    A = I + np.outer(u0, v0conj)
     b = np.linalg.inv(A)
     
 def time_inv():
@@ -170,6 +170,16 @@ def ABiC(Ahat, xr, xi):
     :return zi: m-dimensional numpy arrays containing the imaginary part of z.
     """
 
-    raise NotImplementedError
-
+    B = np.triu(Ahat) + np.transpose(np.triu(Ahat))
+    C = np.tril(Ahat, 1) - np.transpose(np.tril(Ahat, 1))
+    
+    (m, ) = np.shape(xi)
+    
+    zr = np.zeros(m)
+    zi = np.zeros(m)
+    
+    for j in range(m):
+        zr += xr[j]*B[:, j] - xi[j]*C[:, j]
+        zi += xr[j]*C[:, j] + xi[j]*B[:, j]
+        
     return zr, zi
