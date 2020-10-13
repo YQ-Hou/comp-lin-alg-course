@@ -127,7 +127,7 @@ def rank1pert_inv(u, v):
     I = np.identity(m)
     vconj = v.conj()
     a = -1/(1 + vconj.dot(u))
-    Ainv = I + a * (np.outer(u,vconj))
+    Ainv = I + a * (np.outer(u, vconj))
 
     return Ainv
 
@@ -170,8 +170,8 @@ def ABiC(Ahat, xr, xi):
     :return zi: m-dimensional numpy arrays containing the imaginary part of z.
     """
 
-    B = np.triu(Ahat) + np.transpose(np.triu(Ahat))
-    C = np.tril(Ahat, 1) - np.transpose(np.tril(Ahat, 1))
+    B = np.triu(Ahat) + np.transpose(np.triu(Ahat, 1))
+    C = np.tril(Ahat, 0) - np.transpose(np.tril(Ahat, 0))
     
     (m, ) = np.shape(xi)
     
