@@ -156,7 +156,10 @@ we see
       \end{pmatrix},
 
 which means that all the columns of `uv^T` are multiples of `u`. We will
-see in the next section that this matrix has rank 1.
+see in the next section that this matrix has rank 1. In the complex
+number case, the transpose $^T$ is replaced by the adjoint $^*$ which
+is the complex conjugate of the transpose. There will be more about this
+later.
 
 .. _ex-basic-matvec:
 
@@ -357,7 +360,7 @@ write
 
    .. math::
 
-      e_j = \sum_{k=1}^m z_{ik} a_k, \quad 1\leq j \leq m.
+      e_j = \sum_{k=1}^m z_{jk} a_k, \quad 1\leq j \leq m.
 
 In other words,
 
