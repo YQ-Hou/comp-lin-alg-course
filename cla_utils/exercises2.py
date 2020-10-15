@@ -1,4 +1,17 @@
 import numpy as np
+import timeit
+import numpy.random as random
+
+# pre-construct a matrix in the namespace to use in tests
+A100 = random.randn(100,100) + 1j*random.randn(100,100)
+Q100, R100 = np.linalg.qr(A100)
+b100 = random.randn(100,100) + 1j*random.randn(100,100)
+A200 = random.randn(200,200) + 1j*random.randn(200,200)
+Q200, R200 = np.linalg.qr(A200)
+b200 = random.randn(200,200) + 1j*random.randn(200,200)
+A400 = random.randn(400,400) + 1j*random.randn(400,400)
+Q400, R400 = np.linalg.qr(A400)
+b400 = random.randn(400,400) + 1j*random.randn(400,400)
 
 
 def orthog_cpts(v, Q):
@@ -15,9 +28,14 @@ def orthog_cpts(v, Q):
     :return r: an m-dimensional numpy array containing the residual
     :return u: an n-dimensional numpy array containing the coefficients
     """
+    (m, n) = Q.shape
+    r = v
+    u = np.zeros(n)
 
-    raise NotImplementedError
-
+    for i in range(n):
+        u[i] = np.dot(Q[:, i].T, v)
+        r = r - u[i] * Q[:, i]
+    
     return r, u
 
 
@@ -30,11 +48,77 @@ def solveQ(Q, b):
 
     :return x: m dimensional array containing the solution.
     """
-
-    raise NotImplementedError
-
+    
+    Q_conj = Q.conj().T
+    x = np.dot(Q_conj, b)
+    
     return x
 
+def timeable_solveQ100():
+    """
+    Doing a solveQ example with m = 100 that we can
+    pass to timeit.
+    """
+    
+    b = solveQ(Q100, b100)
+
+def timeable_solveQ200():
+    """
+    Doing a solveQ example with m = 200 that we can
+    pass to timeit.
+    """
+    
+    b = solveQ(Q200, b200)
+
+def timeable_solveQ400():
+    """
+    Doing a solveQ example with m = 400 that we can
+    pass to timeit.
+    """
+    
+    b = solveQ(Q400, b400)
+    
+def timeable_np100():
+    """
+    Doing a inbuilt example with m = 100 that we can
+    pass to timeit.
+    """
+    
+    b = np.linalg.solve(Q100, b100)
+
+def timeable_np200():
+    """
+    Doing a inbuilt example with m = 200 that we can
+    pass to timeit.
+    """
+    
+    b = np.linalg.solve(Q200, b200)
+
+def timeable_np400():
+    """
+    Doing a inbuilt example with m = 400 that we can
+    pass to timeit.
+    """
+    
+    b = np.linalg.solve(Q400, b400)
+    
+def time_solveQ():
+    """
+    Get some timings for solveQ.
+    """
+
+    print("Timing for solveQ for m = 100")
+    print(timeit.Timer(timeable_solveQ100).timeit(number=1))
+    print("Timing for solveQ for m = 200")
+    print(timeit.Timer(timeable_solveQ200).timeit(number=1))
+    print("Timing for solveQ for m = 400")
+    print(timeit.Timer(timeable_solveQ400).timeit(number=1))
+    print("Timing for inbuilt for m = 100")
+    print(timeit.Timer(timeable_np100).timeit(number=1))
+    print("Timing for inbuilt for m = 200")
+    print(timeit.Timer(timeable_np200).timeit(number=1))
+    print("Timing for inbuilt for m = 400")
+    print(timeit.Timer(timeable_np400).timeit(number=1))
 
 def orthog_proj(Q):
     """
