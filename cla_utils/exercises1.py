@@ -99,7 +99,7 @@ def rank2(u1, u2, v1, v2):
     Return the rank2 matrix A = u1*v2^* + u2*v2^*.
 
     :param u1: m-dimensional numpy array
-    :param u1: m-dimensional numpy array
+    :param u2: m-dimensional numpy array
     :param v1: n-dimensional numpy array
     :param v2: n-dimensional numpy array
     """
@@ -164,7 +164,7 @@ def ABiC(Ahat, xr, xi):
     with
 
     :param Ahat: an mxm-dimensional numpy array with Ahat[i,j] = B[i,j] \
-    for i<=j and Ahat[i,j] = C[i,j] for i>j.
+    for i>=j and Ahat[i,j] = C[i,j] for i<j.
 
     :return zr: m-dimensional numpy arrays containing the real part of z.
     :return zi: m-dimensional numpy arrays containing the imaginary part of z.
